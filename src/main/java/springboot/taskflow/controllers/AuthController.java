@@ -29,7 +29,13 @@ public class AuthController {
     }
     @PostMapping("/sign-in")
     public ResponseEntity<JWTResponse> signIn( @RequestBody UserSignInDTO request) {
+
         return ResponseEntity.ok(authService.SignIn(request));
+    }
+
+    @GetMapping("test")
+    public String test (){
+        return "test";
     }
 
 }

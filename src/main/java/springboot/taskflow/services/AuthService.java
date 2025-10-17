@@ -4,8 +4,8 @@ package springboot.taskflow.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,7 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 UserCredential.getUsername(), UserCredential.getPassword()
         ));
+
         var user =userRepository.findByUsername(UserCredential.getUsername()).orElseThrow(
                 ()->new IllegalArgumentException("Invalid username or password"));
         var jwt =jwtService.generateToken((UserDetails) user) ;
@@ -54,7 +55,23 @@ public class AuthService {
         return JWTResponse.builder().token(jwt).build();
     }
 
+    public JWTResponse signIn(UserSignInDTO request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        } catch (BadCredentialsException e) {
+            // Throw a more specific exception for bad credentials
+            throw new IllegalArgumentException("Invalid username or password");
+        }
 
-
-
+        var user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        var jwt = jwtService.generateToken((UserDetails) user);
+        return JWTResponse.builder().token(jwt).build();
+    }
 }
+
+
+
+
+
