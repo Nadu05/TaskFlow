@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import springboot.taskflow.model.UserEntity;
+import springboot.taskflow.payload.JWTResponse;
 import springboot.taskflow.payload.UserSignInDTO;
 import springboot.taskflow.payload.UserSignUpDTO;
 import springboot.taskflow.repositories.UserRepository;
@@ -18,6 +21,8 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public void SignUp(UserSignUpDTO userEntity) {
 
@@ -30,21 +35,23 @@ public class AuthService {
         UserEntity user =new UserEntity();
         user.setUsername(userEntity.getUsername());
         user.setEmail(userEntity.getEmail());
-        user.setPassword(userEntity.getPassword());
+        user.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         user.setFirstName(userEntity.getFirstName());
         user.setLastName(userEntity.getLastName());
         userRepository.save(user);
 
     }
 
-    public void SignIn(UserSignInDTO UserCredential) {
-        //Authentication auth = authenticationManager.authenticate(authenticationManager)
+    public JWTResponse SignIn(UserSignInDTO UserCredential) {
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 UserCredential.getUsername(), UserCredential.getPassword()
         ));
         var user =userRepository.findByUsername(UserCredential.getUsername()).orElseThrow(
                 ()->new IllegalArgumentException("Invalid username or password"));
-        // var jwt = ;
+        var jwt =jwtService.generateToken((UserDetails) user) ;
+
+        return JWTResponse.builder().token(jwt).build();
     }
 
 

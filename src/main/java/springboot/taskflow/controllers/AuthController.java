@@ -4,6 +4,8 @@ package springboot.taskflow.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springboot.taskflow.payload.JWTResponse;
+import springboot.taskflow.payload.UserSignInDTO;
 import springboot.taskflow.payload.UserSignUpDTO;
 import springboot.taskflow.services.AuthService;
 
@@ -13,10 +15,7 @@ import springboot.taskflow.services.AuthService;
 public class AuthController {
 
     private final AuthService authService;
-    @GetMapping ("/test")
-    public String test() {
-        return "test-ok ";
-    }
+
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestBody UserSignUpDTO userSignUpDTO) {
         try{
@@ -28,4 +27,9 @@ public class AuthController {
         }
 
     }
+    @PostMapping("/sign-in")
+    public ResponseEntity<JWTResponse> signIn( @RequestBody UserSignInDTO request) {
+        return ResponseEntity.ok(authService.SignIn(request));
+    }
+
 }
