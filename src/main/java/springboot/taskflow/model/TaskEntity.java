@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table
+@Table(name = "tasks")
 public class TaskEntity {
 
     @Id

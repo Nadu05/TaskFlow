@@ -14,11 +14,22 @@ import springboot.taskflow.services.TaskService;
 
 import java.util.List;
 
+
 @RestController
+@RequestMapping("/task")
 public class TaskController {
 
 
-    private  TaskService taskService;
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "tested" ;
+    }
 
 
     @PostMapping("/taskAdd")
