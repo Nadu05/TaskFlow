@@ -4,9 +4,9 @@ package springboot.taskflow.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springboot.taskflow.payload.JWTResponse;
-import springboot.taskflow.payload.UserSignInDTO;
-import springboot.taskflow.payload.UserSignUpDTO;
+import springboot.taskflow.payload.auth.JWTResponse;
+import springboot.taskflow.payload.auth.UserSignInDTO;
+import springboot.taskflow.payload.auth.UserSignUpDTO;
 import springboot.taskflow.services.AuthService;
 
 @RequiredArgsConstructor

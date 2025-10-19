@@ -1,4 +1,4 @@
-package springboot.taskflow.payload;
+package springboot.taskflow.payload.auth;
 
 
 import lombok.Builder;
