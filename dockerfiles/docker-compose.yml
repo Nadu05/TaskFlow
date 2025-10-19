@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskflow_backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/taskflow
+      - SPRING_DATASOURCE_USERNAME:admin
+      - SPRING_DATASOURCE_PASSWORD:admin
+      - JWT_SECRET:c2VjdXJlLWp3dC1zZWNyZXQtZm9yLXRhc2tmbG93LWFwcGxpY2F0aW9u
+    depends_on:
+      - postgres_db
+    networks:
+      - taskflow-network
+
+  postgres_db:
+    image: postgres:15
+    container_name: my_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: taskflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # pgAdmin Console Service
+  pgadmin_console:
+    image: dpage/pgadmin4:latest
+    container_name: my_pgadmin_console
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres_db
+
+volumes:
+  postgres_data:
+
+networks:
+  taskflow-network:
+    driver: bridge
+
+
