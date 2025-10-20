@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: dockerfiles/Dockerfile
+    container_name: taskflow_backend
+    restart: unless-stopped
+    ports:
+      - "8080:8000"
+    environment:
+
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://20.193.136.245:5432/taskflow
+      - SPRING_DATASOURCE_USERNAME:admin
+      - SPRING_DATASOURCE_PASSWORD:admin
+      - JWT_SECRET:c2VjdXJlLWp3dC1zZWNyZXQtZm9yLXRhc2tmbG93LWFwcGxpY2F0aW9u
+
+
+
+
